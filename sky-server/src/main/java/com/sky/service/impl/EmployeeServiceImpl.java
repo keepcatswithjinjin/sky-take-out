@@ -1,8 +1,12 @@
 package com.sky.service.impl;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
@@ -10,6 +14,7 @@ import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +23,7 @@ import org.springframework.util.DigestUtils;
 
 import javax.net.ssl.SSLEngineResult;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -84,9 +90,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 //            employee.setSex("2");
 //        }
 
-        //TODO 后期获取当前登录用户id
-        employee.setCreateUser(10L);
-        employee.setUpdateUser(10L);
+        //获取当前登录用户id
+        employee.setCreateUser(BaseContext.getCurrentId());
+        employee.setUpdateUser(BaseContext.getCurrentId());
 
         /***
          * 校验username是否唯一
@@ -94,6 +100,47 @@ public class EmployeeServiceImpl implements EmployeeService {
          */
         employeeMapper.save(employee);
 
+    }
+
+
+    /***
+     * 分页查询
+     * @return
+     */
+    @Override
+    public PageResult page(String name, int page, int pageSize) {
+        //1.设置分页参数
+        PageHelper.startPage(page,pageSize);
+
+        //2.普通条件查询即可  页数由插件完成
+         List<Employee> empList = employeeMapper.list(name);
+        //3.封装
+        //强转pageHelper类型
+        Page<Employee> p = (Page<Employee>) empList;
+        //封装
+        PageResult pageResult = new PageResult(p.getTotal(), p.getResult());
+        return pageResult;
+    }
+
+    /***
+     * 状态转换
+     * @param status
+     * @param id
+     */
+    @Override
+    public void status(int status, int id) {
+        employeeMapper.status(status,id);
+    }
+
+
+    /***
+     * id查人
+     * @param id
+     */
+    @Override
+    public Employee selectById(int id) {
+        Employee empList = employeeMapper.selectById(id);
+        return empList;
     }
 
 }

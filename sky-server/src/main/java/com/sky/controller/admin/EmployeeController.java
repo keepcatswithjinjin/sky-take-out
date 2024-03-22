@@ -3,8 +3,10 @@ package com.sky.controller.admin;
 import com.sky.constant.JwtClaimsConstant;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.properties.JwtProperties;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.EmployeeService;
 import com.sky.utils.JwtUtil;
@@ -71,12 +73,51 @@ public class EmployeeController {
     @PostMapping
     public Result save(@RequestBody EmployeeDTO employeeDTO){
         log.info("新增员工{}",employeeDTO);
+
         employeeService.save(employeeDTO);
         return Result.success();
     }
 
 
+    /***
+     * 员工分页查询
+     * 根据名字查询   模糊匹配
+     */
+    @ApiOperation("分页查询员工")
+    @GetMapping("/page")
+    public Result page(String name, int page, int pageSize){
+        log.info("进行分页查新 name：{}  page：{}  pageSize：{}",name,page,pageSize);
+         PageResult pageResult = employeeService.page(name,page,pageSize);
 
+        return Result.success(pageResult);
+    }
+
+
+    /***
+     * 根据id查询员工  精准查询
+     */
+    @ApiOperation("Id查询员工")
+    @GetMapping("/{id}")
+    public Result selectById(@PathVariable int id){
+         Employee empList = employeeService.selectById(id);
+        return Result.success(empList);
+    }
+
+    /***
+     * 员工状态
+     */
+    @ApiOperation("员工状态转换")
+    @PostMapping("/status/{status}")
+    public Result status(@PathVariable int status, int id){
+        log.info("员工id:{}   状态:{}",id,status);
+        employeeService.status(status,id);
+        return Result.success();
+    }
+
+
+    /***
+     * 编辑员工
+     */
 
 
     /**

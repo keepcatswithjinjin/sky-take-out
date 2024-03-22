@@ -3,6 +3,7 @@ package com.sky.service;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
+import com.sky.result.PageResult;
 
 public interface EmployeeService {
 
@@ -18,4 +19,26 @@ public interface EmployeeService {
      * @param employeeDTO
      */
     void save(EmployeeDTO employeeDTO);
+
+
+    /***
+     * 分页查询 返回总数和信息数组
+     * 数据使用集合方式
+     * @return
+     */
+    PageResult page(String name, int page, int pageSize);
+
+
+    /***
+     * 状态转换
+     * @param status
+     * @param id
+     */
+    void status(int status, int id);
+
+    /***
+     * id查人
+     * @param id
+     */
+    Employee selectById(int id);
 }
