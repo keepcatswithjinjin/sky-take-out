@@ -16,4 +16,5 @@ public class PasswordEditDTO implements Serializable {
     //新密码
     private String newPassword;
 
+
 }

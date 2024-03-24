@@ -1,4 +1,4 @@
-package com.sky.entity;
+package com.sky.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Employee implements Serializable {
+public class PasswordEditTransDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private Long empId;
 
     private String username;
 
@@ -42,5 +42,10 @@ public class Employee implements Serializable {
 
     private Long updateUser;
 
+    //旧密码
+    private String oldPassword;
+
+    //新密码
+    private String newPassword;
 
 }

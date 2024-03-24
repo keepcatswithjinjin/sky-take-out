@@ -1,5 +1,6 @@
 package com.sky.mapper;
 
+import com.sky.dto.PasswordEditTransDto;
 import com.sky.entity.Employee;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -27,6 +28,12 @@ public interface EmployeeMapper {
     void save(Employee employee);
 
 
+    /***
+     * 根据用户id查询 密码修改
+     */
+    @Select("select * from employee where id = #{empId}")
+    Employee fixPasswordByID(Long empId);
+
     /**
      * 根据姓名分页查询员工信息
      * @return
@@ -49,4 +56,20 @@ public interface EmployeeMapper {
      */
     @Select("select * from employee where id = #{id}")
     Employee selectById(int id);
+
+
+    /***
+     *
+     * @param employee
+     */
+    void fix(Employee employee);
+
+
+    /***
+     * 修改密码
+     * @param passwordEditTransDto
+     */
+
+    @Update("update employee set password = #{newPassword},create_time = #{createTime},create_user=#{createUser},update_time=#{updateTime},update_user=#{updateUser} where id = #{empId}")
+    void passwordEditById(PasswordEditTransDto passwordEditTransDto);
 }
